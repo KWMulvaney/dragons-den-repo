@@ -1,5 +1,7 @@
 package den.dragon;
 
+import java.util.ArrayList;
+
 import de.vandermeer.asciitable.v2.RenderedTable;
 import de.vandermeer.asciitable.v2.V2_AsciiTable;
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
@@ -8,28 +10,21 @@ import de.vandermeer.asciitable.v2.row.ContentRow;
 
 public class TablePlayTime {
 
-    public RenderedTable generateTable(int starthour) {
+    public RenderedTable generateTable(int starthour, ArrayList<String[]> rows) {
         V2_AsciiTable at = new V2_AsciiTable();// creating a table
         char[] alignText = new char[14]; // aligns columns
         for (int i = 0; i < 14; i++) {
-            alignText[i] = 'c';
+            alignText[i] = 'c'; // centres all columns
         }
         at.addRule(); // adding a ruler line / border/ separator for the top row
         ContentRow row = generateHeader(at, alignText, starthour);
         row.setAlignment(alignText);// centres all headers
         at.addRule(); // add separator between header and table
-        row = at.addRow(null, "BBC One", null, null, null, null, null, null, null, "Breakfast", null, null, null,
-                "Saturday Kitchen");
-        row.setAlignment(alignText);
-        row = at.addRow(null, "BBC Two", null, null, null, "Ray Harryhausen ...", null, null, null, "Natural World ",
-                null, null, null, "Secret Britain");
-        row.setAlignment(alignText);
-        row = at.addRow(null, "ITV One", null, "Advent..", null, null, null, null, null, null, null, null, null,
-                "Carry on Girls (1973)");
-        row.setAlignment(alignText);
-        row = at.addRow(null, "Channel 4", null, "Frasier", null, "Frasier", null, null, null, "The Morning Line", null,
-                "The Big Bang Theory", null, "The Big Bang Theory");
-        row.setAlignment(alignText);
+        for (int i = 0; i < rows.size(); i++) {
+            row = at.addRow(rows.get(i));
+            row.setAlignment(alignText);
+        }
+
         at.addRule();
         V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();// creates a printable table
         WidthFixedColumns colwidths = new WidthFixedColumns(); // creates fixed size columns for the table
@@ -59,8 +54,21 @@ public class TablePlayTime {
 
     // when creating a row the nulls allow column spanning - will add method to insert nulls!
     public static void main(String[] args) {
+        ArrayList<String[]> rows = new ArrayList<>();
+        String[] row = new String[] { null, "BBC One", null, null, null, null, null, null, null, "Breakfast", null,
+                null, null, "Saturday Kitchen" };
+        rows.add(row);
+        row = new String[] { null, "BBC Two", null, null, null, "Ray Harryhausen ...", null, null, null,
+                "Natural World ", null, null, null, "Secret Britain" };
+        rows.add(row);
+        row = new String[] { null, "ITV One", null, "Advent..", null, null, null, null, null, null, null, null, null,
+                "Carry on Girls (1973)" };
+        rows.add(row);
+        row = new String[] { null, "Channel 4", null, "Frasier", null, "Frasier", null, null, null, "The Morning Line",
+                null, "The Big Bang Theory", null, "The Big Bang Theory" };
+        rows.add(row);
         TablePlayTime tableGenerator = new TablePlayTime();
-        RenderedTable rt = tableGenerator.generateTable(21);
+        RenderedTable rt = tableGenerator.generateTable(8, rows);
         System.out.println(rt); // prints the table
     }
 
